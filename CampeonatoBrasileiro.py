@@ -1,7 +1,17 @@
 # %%
 import pandas as pd
 import requests
+import logging
 from os.path import exists
+
+
+def set_up_log(root_name: str) -> None: 
+    logging.root = logging.getLogger(root_name)
+    logging.basicConfig(level = logging.INFO)
+
+
+#If we want show a log in display
+set_up_log('CampeonatoBrasileiro')
 
 # Ler alguma tabela de algum site na web
 url = requests.get("https://www.uol.com.br/esporte/futebol/campeonatos/brasileirao/")
@@ -38,7 +48,7 @@ times_campeonato = pd.DataFrame(times_campeonato_formated)
 times_campeonato = times_campeonato.join(classificacao_campeonato)
 
 # Exibindo com a juncao 
-times_campeonato
+#times_campeonato
 
 # %%
 times_campeonato_classificação_to_list = times_campeonato.classificação.tolist()
@@ -58,7 +68,6 @@ time = pd.DataFrame(time, columns=['Clube'])
 times_campeonato = times_campeonato.join(sigla)
 times_campeonato = times_campeonato.join(time)
 times_campeonato = times_campeonato[['classificação', 'Clube', 'Sigla', 'PG', 'J', 'V', 'E', 'D', 'GC', 'GP', 'SG', '%']]
-times_campeonato
 
 # %%
 times_campeonato = times_campeonato[['Clube', 'Sigla', 'PG', 'J', 'V', 'E', 'D', 'GC', 'GP', 'SG', '%']] 
@@ -87,13 +96,12 @@ xlsxFile = times_campeonato.to_excel(r'CampeonatoBrasileiro_2022.xlsx', header=T
 file_txt_exists = exists("CampeonatoBrasileiro_2022.txt")
 file_xlsx_exists = exists("CampeonatoBrasileiro_2022.xlsx")
 
-
 # %%
 if(file_txt_exists and file_xlsx_exists):
-    print("The files txt and xlsx are crated with success in the directory")
+    logging.info('The files txt and xlsx are crated with success in the directory')  
 elif(file_txt_exists or file_xlsx_exists):
-    print("Only one file was created, check the directory")
+    logging.info('Only one file was created, check the directory')  
 else:
-    print("There are no files in the directory")        
+    logging.info('There are no files created in the directory')  
 
 
